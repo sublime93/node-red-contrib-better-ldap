@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-better-ldap",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A better node for LDAP communication.",
   "main": "transports/ldap/index.js",
   "scripts": {
