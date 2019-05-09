@@ -28,7 +28,8 @@ module.exports = function (RED) {
             let ldap = require('./ldap');
             node.status({ fill:"blue",shape:"dot",text: 'connecting' });
             try {
-                await ldap.connect(node.ldapConfig.options.host, node.ldapConfig.credentials.username, node.ldapConfig.credentials.password);
+                let url = `${node.ldapConfig.options.host}:${node.ldapConfig.options.port}`;
+                await ldap.connect(url, node.ldapConfig.credentials.username, node.ldapConfig.credentials.password);
                 node.status({ fill: 'green', shape: 'dot', text: 'connected' });
 
                 await ldap.update(node.dn, node.operation, node.attribute, node.value);
