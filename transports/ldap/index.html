@@ -1,0 +1,104 @@
+<script type="text/x-red" data-template-name="ldap-update in">
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-ldap"><i class="fa fa-user"></i> Add new LDAP Server</label>
+    <input type="text" id="node-input-ldap">
+  </div>
+  <div class="form-row">
+    <label for="node-input-operation"><i class="fa fa-wrench"></i> Operation</label>
+    <select type="text" id="node-input-operation">
+      <option value="replace">Replace</option>
+      <option value="add">Add</option>
+      <option value="delete">Delete</option>
+    </select>
+  </div>
+  <div class="form-row">
+      <label for="node-input-dn"> DN</label>
+      <input type="text" id="node-input-dn" placeholder="CN=jim bob,OU=users,DC=corp,DC=com">
+  </div>
+  <div class="form-row">
+      <label for="node-input-attribute"> Attribute</label>
+      <input type="text" id="node-input-attribute" placeholder="givenName">
+  </div>
+  <div class="form-row">
+      <label for="node-input-value"> Value</label>
+      <input type="text" id="node-input-value" placeholder="tom">
+  </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('ldap-update in', {
+        category: 'storage-input',
+        color:"#AAAA66",
+        defaults: {
+            name: { value: '' },
+            ldap: { type: 'ldap', required: true },
+            operation: { value: 'list', required: true },
+            dn: { value: '' },
+            attribute: { value: '' },
+            value: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "db.png",
+        label: function () {
+            return this.name || 'ldap-update';
+        },
+        labelStyle: function () {
+            return this.name ? 'node_label_italic' : '';
+        },
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="ldap">
+  <div class="form-row">
+    <label for="node-config-input-host"><i class="fa fa-bookmark"></i> Host</label>
+    <input type="text" id="node-config-input-host" placeholder="localhost" style="width: 40%;" />
+    <label for="node-config-input-port" style="margin-left: 10px; width: 35px; "> Port</label>
+    <input type="text" id="node-config-input-port" placeholder="22" style="width:45px">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-username"><i class="fa fa-user"></i> Username</label>
+    <input type="text" id="node-config-input-username">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-password"><i class="fa fa-key"></i> Password</label>
+    <input type="password" id="node-config-input-password">
+  </div>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('ldap', {
+            category: 'config',
+            defaults: {
+                host: { value: 'ldap://localhost', required: true },
+                port: { value: '389', required: true, validate: RED.validators.number() },
+            },
+            credentials: {
+                username: { type: "text" },
+                password: { type: "password" }
+            },
+            exportable: false,
+            label: function() {
+                return this.host || ''
+            },
+            oneditsave: function() {
+                let trimFields = [
+                    "username",
+                    "password"
+                ];
+                // Just in case any whitespace has crept in with the copy-paste of the fields
+                trimFields.forEach(function(field) {
+                    let v = $("#node-config-input-"+field).val();
+                    v = v.trim();
+                    $("#node-config-input-"+field).val(v);
+                });
+            }
+        });
+    })();
+</script>
