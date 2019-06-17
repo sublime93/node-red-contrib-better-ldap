@@ -1,13 +1,35 @@
+const ldap = require('./ldap');
 module.exports = function (RED) {
     'use strict';
 
     function ldapNode (n) {
         RED.nodes.createNode(this, n);
+        let node = this;
 
         this.options = {
             host: n.host || 'ldap://localhost',
             port: n.port || 389
         };
+
+        node.status({ });
+
+        this.connect = function(config, node) {
+            node.status({ fill:"blue",shape:"dot",text: 'connecting...' });
+            let url = `${config.options.host}:${config.options.port}`;
+            ldap.connect(url, config.credentials.username, config.credentials.password).then( (res, err) => {
+                node.status({ fill: 'green', shape: 'dot', text: 'connected' });
+            });
+        };
+
+        this.on('close', function (done) {
+            ldap.disconnect();
+            node.status({ });
+            // if (this.tick) { clearTimeout(this.tick); }
+            // if (this.check) { clearInterval(this.check); }
+            // node.connected = false;
+            // node.emit("state"," ");
+            done();
+        });
     }
 
     function ldapUpdateNode (n) {
@@ -17,27 +39,28 @@ module.exports = function (RED) {
         this.attribute = n.attribute;
         this.value = n.value;
         this.ldapConfig = RED.nodes.getNode(n.ldap);
-
         let node = this;
+
+        this.ldapConfig.connect(this.ldapConfig, node);
+
         node.on('input', async function (msg) {
             node.operation = msg.operation || node.operation;
             node.dn = msg.dn || node.dn;
             node.attribute = msg.attribute || node.attribute;
             node.value = msg.payload || node.value;
 
-            let ldap = require('./ldap');
-            node.status({ fill:"blue",shape:"dot",text: 'connecting' });
             try {
-                let url = `${node.ldapConfig.options.host}:${node.ldapConfig.options.port}`;
-                await ldap.connect(url, node.ldapConfig.credentials.username, node.ldapConfig.credentials.password);
-                node.status({ fill: 'green', shape: 'dot', text: 'connected' });
+                node.status({ fill: 'blue', shape: 'dot', text: 'running update' });
 
-                await ldap.update(node.dn, node.operation, node.attribute, node.value);
+                let update = await ldap.update(node.dn, node.operation, node.attribute, node.value);
+                msg.ldapStatus = update;
+
+                node.send(msg);
 
                 node.status({});
             } catch (err) {
                 node.status({ fill: 'red', shape: 'ring', text: 'failed' });
-                node.error(err ? err.toString() : 'Unknown error' );
+                node.error(err ? err : 'Unknown error' );
             }
         });
     }
