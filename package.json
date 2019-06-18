@@ -14,7 +14,8 @@
     "better",
     "ldap",
     "activedirectory",
-    "redconnect"
+    "redconnect",
+    "node-red"
   ],
   "node-red": {
     "nodes": {
