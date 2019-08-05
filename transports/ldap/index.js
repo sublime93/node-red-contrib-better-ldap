@@ -1,10 +1,11 @@
-const ldap = require('./ldap');
+const ldapClient = require('./ldap');
 module.exports = function (RED) {
     'use strict';
 
     function ldapNode (n) {
         RED.nodes.createNode(this, n);
         let node = this;
+        let that = this;
 
         this.options = {
             host: n.host || 'ldap://localhost',
@@ -15,14 +16,22 @@ module.exports = function (RED) {
 
         this.connect = function(config, node) {
             node.status({ fill:"blue",shape:"dot",text: 'connecting...' });
+
+            that.ldapClient = new ldapClient();
+            that.ldapClient.random = Math.random();
+
             let url = `${config.options.host}:${config.options.port}`;
-            ldap.connect(url, config.credentials.username, config.credentials.password).then( (res, err) => {
+            that.ldapClient.connect(url, config.credentials.username, config.credentials.password).then( (res, err) => {
+                if (err) {
+                    node.status({ fill: 'red', shape: 'dot', text: 'Error'});
+                    node.error(err ? err.toString() : 'Unknown error' );
+                }
                 node.status({ fill: 'green', shape: 'dot', text: 'connected' });
             });
         };
 
         this.on('close', function (done) {
-            ldap.disconnect();
+            that.ldapClient.disconnect();
             node.status({ });
             // if (this.tick) { clearTimeout(this.tick); }
             // if (this.check) { clearInterval(this.check); }
@@ -52,15 +61,15 @@ module.exports = function (RED) {
             try {
                 node.status({ fill: 'blue', shape: 'dot', text: 'running update' });
 
-                let update = await ldap.update(node.dn, node.operation, node.attribute, node.value);
+                let update = await this.ldapConfig.ldapClient.update(node.dn, node.operation, node.attribute, node.value);
                 msg.ldapStatus = update;
 
                 node.send(msg);
 
-                node.status({});
+                node.status({ fill: 'green', shape: 'dot', text: 'completed' });
             } catch (err) {
                 node.status({ fill: 'red', shape: 'ring', text: 'failed' });
-                node.error(err ? err : 'Unknown error' );
+                node.error(err ? err.toString() : 'Unknown error' );
             }
         });
     }

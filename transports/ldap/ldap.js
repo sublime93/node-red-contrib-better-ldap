@@ -1,9 +1,9 @@
 const ldap = require('ldapjs');
 const uuidParse = require('../tools/uuid-parse');
 
-module.exports = {
-    client: undefined,
-    defaultAttributes: {
+function ldapClient () {
+    this.client = undefined;
+    this.defaultAttributes = {
         user: [
             'dn', 'userPrincipalName', 'sAMAccountName', 'objectSID', 'mail',
             'lockoutTime', 'whenCreated', 'pwdLastSet', 'userAccountControl',
@@ -13,8 +13,8 @@ module.exports = {
         group: [
             'dn', 'cn', 'description'
         ]
-    },
-    baseDn: '',
+    };
+    this.baseDn = '';
     /**
      * @public
      * Connect to LDAP server
@@ -24,7 +24,7 @@ module.exports = {
      * @param {object} options  additional options for ldapjs connection
      * @returns {Promise<*>}
      */
-    connect: async function(url, username, password, options = {}) {
+    this.connect = async function (url, username, password, options = {}) {
         let that = this;
         this.client = ldap.createClient({
             url,
@@ -43,12 +43,12 @@ module.exports = {
                 return resolve(conn);
             });
         });
-    },
-    disconnect: function () {
+    }
+    this.disconnect = function () {
         if (this.client) {
             this.client.unbind();
         }
-    },
+    };
     /**
      * @public
      * Perform an update action on a specific LDAP object
@@ -58,7 +58,7 @@ module.exports = {
      * @param {null|string} value Value of the change
      * @returns {Promise<*>}
      */
-    update: async function (dn, operation, attribute, value = null) {
+    this.update = async function (dn, operation, attribute, value = null) {
         let that = this;
         let changeObj = {
             operation,
@@ -76,14 +76,14 @@ module.exports = {
                 return resolve({ success: true });
             });
         });
-    },
+    };
     /**
      * @public
      * @param {string} dn       base dn for the search
      * @param {object} userOpts additional user options for search query
      * @returns {Promise<array(object)>}
      */
-    search: async function (dn, userOpts) {
+    this.search = async function (dn, userOpts) {
         let opts = {
             // filter: '&(dn=CN=Jordan Vohwinkel,OU=Test,OU=Users,OU=NTech,OU=BOE Companies,DC=Corp,DC=BOETeams,DC=com)',
             filter: 'cn=Jordan Vohwinkel',
@@ -114,7 +114,7 @@ module.exports = {
                 res.on('end', function(result) { return resolve(that.results); });
             })
         });
-    },
+    };
     /**
      * @private
      * Default search entry parser.
@@ -122,10 +122,14 @@ module.exports = {
      * @param {object} raw        Raw return object
      * @param {function} callback Callback when parsing is complete
      */
-    onSearchEntry: function(item, raw, callback) {
+    this.onSearchEntry = function (item, raw, callback) {
         if (raw.hasOwnProperty('objectSid')) item.objectSid = uuidParse.unparse(raw.objectSid);
         if (raw.hasOwnProperty("objectGUID")) entry.objectGUID = uuidParse.unparse(raw.objectGUID);
         if (raw.hasOwnProperty("mS-DS-ConsistencyGuid")) entry['mS-DS-ConsistencyGuid'] = uuidParse.unparse(raw['mS-DS-ConsistencyGuid']);
         callback(item);
-    }
-};
+    };
+
+    return this;
+}
+
+module.exports = ldapClient;
