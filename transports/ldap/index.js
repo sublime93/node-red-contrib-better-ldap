@@ -68,6 +68,8 @@ module.exports = function (RED) {
 
                 node.status({ fill: 'green', shape: 'dot', text: 'completed' });
             } catch (err) {
+                msg.error = err;
+                node.send(msg);
                 node.status({ fill: 'red', shape: 'ring', text: 'failed' });
                 node.error(err ? err.toString() : 'Unknown error' );
             }
