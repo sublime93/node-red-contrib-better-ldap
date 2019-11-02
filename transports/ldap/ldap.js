@@ -84,30 +84,26 @@ function ldapClient () {
      * @returns {Promise<array(object)>}
      */
     this.search = async function (dn, userOpts) {
-        let opts = {
-            // filter: '&(dn=CN=Jordan Vohwinkel,OU=Test,OU=Users,OU=NTech,OU=BOE Companies,DC=Corp,DC=BOETeams,DC=com)',
-            filter: 'cn=Jordan Vohwinkel',
-            scope: 'sub',
-            attributes: this.defaultAttributes.user
-        };
-        // Overwrite default attributes with user defined
-        Object.assign(opts, userOpts);
+        let that = this;
+        if (userOpts.attributes !== '') {
+            userOpts.attributes = userOpts.attributes.split(',');
+        } else {
+            userOpts.attributes = this.defaultAttributes.user;
+        }
         return new Promise(function (resolve, reject) {
-            this.results = [];
-            let that = this;
-
-            this.client.search(dn, opts, function (err, res) {
+            that.results = [];
+            that.client.search(dn, userOpts, function (err, res) {
                 if (err) {
-                    console.log(err);
+                    console.log('better-ldap error', err);
+                    reject(err);
                 }
                 res.on('searchEntry', function (entry) {
                     let res = entry.object;
-                    delete res.controls
+                    delete res.controls;
 
-                    this.onSearchEntry(res, entry.raw, function (item) {
+                    that.onSearchEntry(res, entry.raw, function (item) {
                         that.results.push(item);
                     })
-
                 });
                 res.on('searchReference', function () { reject('Referral chasing not implemented.') });
                 res.on('error', function(err) { return reject(err); });

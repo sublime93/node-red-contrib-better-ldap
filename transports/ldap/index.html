@@ -53,6 +53,61 @@
     });
 </script>
 
+<script type="text/x-red" data-template-name="ldap-search in">
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-ldap"><i class="fa fa-user"></i> Add new LDAP Server</label>
+    <input type="text" id="node-input-ldap">
+  </div>
+  <div class="form-row">
+      <label for="node-input-baseDn"> Base DN</label>
+      <input type="text" id="node-input-baseDn" placeholder="OU=users,DC=corp,DC=com">
+  </div>
+  <div class="form-row">
+    <label for="node-input-searchScope"><i class="fa fa-search"></i> Search Scope</label>
+    <select type="text" id="node-input-searchScope">
+      <option value="base">Base</option>
+      <option value="one">One</option>
+      <option value="sub">Sub</option>
+    </select>
+  </div>
+  <div class="form-row">
+      <label for="node-input-filter"> Filter</label>
+      <input type="text" id="node-input-filter" placeholder="(objectclass=*)">
+  </div>
+  <div class="form-row">
+      <label for="node-input-attributes"> Attributes</label>
+      <input type="text" id="node-input-attributes" placeholder="givenName, firstName, sn">
+  </div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('ldap-search in', {
+    category: 'storage-input',
+    color:"#AAAA66",
+    defaults: {
+      name: { value: '' },
+      ldap: { type: 'ldap', required: true },
+      baseDn: { value: '', required: true },
+      searchScope: { value: 'list', required: true },
+      filter: { value: '(objectclass=*)' },
+      attributes: { value: 'givenName, firstName, sn' }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "db.png",
+    label: function () {
+      return this.name || 'ldap-search';
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+  });
+</script>
+
 
 <script type="text/x-red" data-template-name="ldap">
   <div class="form-row">

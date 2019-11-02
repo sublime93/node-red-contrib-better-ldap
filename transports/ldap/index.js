@@ -76,6 +76,39 @@ module.exports = function (RED) {
         });
     }
 
+    function ldapSearchNode (n) {
+        RED.nodes.createNode(this, n);
+        this.baseDn = n.baseDn;
+        this.searchScope = n.searchScope;
+        this.filter = n.filter;
+        this.attributes = n.attributes;
+        this.ldapConfig = RED.nodes.getNode(n.ldap);
+        let node = this;
+
+        node.on('input', async function (msg) {
+            node.baseDn = msg.baseDn || node.baseDn;
+            node.searchScope = msg.searchScope || node.searchScope;
+            node.filter = msg.filter || node.filter;
+            node.attributes = msg.attributes || node.attributes;
+
+            try {
+                node.status({ fill: 'blue', shape: 'dot', text: 'running query' });
+
+                let search = await this.ldapConfig.ldapClient.search(node.baseDn, { filter: node.filter, attributes: node.attributes, scope: node.searchScope });
+                msg.payload = search;
+
+                node.send(msg);
+
+                node.status({ fill: 'green', shape: 'dot', text: 'completed' });
+            } catch (err) {
+                msg.error = err;
+                node.send(msg);
+                node.status({ fill: 'red', shape: 'ring', text: 'failed' });
+                node.error(err ? err.toString() : 'Unknown error' );
+            }
+        });
+    }
+
     RED.nodes.registerType('ldap', ldapNode, {
         credentials: {
             username: { type: "text" },
@@ -83,4 +116,5 @@ module.exports = function (RED) {
         }
     });
     RED.nodes.registerType('ldap-update in', ldapUpdateNode);
+    RED.nodes.registerType('ldap-search in', ldapSearchNode);
 };
