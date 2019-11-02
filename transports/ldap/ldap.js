@@ -3,17 +3,12 @@ const uuidParse = require('../tools/uuid-parse');
 
 function ldapClient () {
     this.client = undefined;
-    this.defaultAttributes = {
-        user: [
-            'dn', 'userPrincipalName', 'sAMAccountName', 'objectSID', 'mail',
-            'lockoutTime', 'whenCreated', 'pwdLastSet', 'userAccountControl',
-            'employeeID', 'sn', 'givenName', 'initials', 'cn', 'displayName',
-            'comment', 'description', 'title', 'department', 'company'
-        ],
-        group: [
-            'dn', 'cn', 'description'
-        ]
-    };
+    this.defaultAttributes = [
+        'dn', 'userPrincipalName', 'sAMAccountName', 'objectSID', 'mail',
+        'lockoutTime', 'whenCreated', 'pwdLastSet', 'userAccountControl',
+        'employeeID', 'sn', 'givenName', 'initials', 'cn', 'displayName',
+        'comment', 'description', 'title', 'department', 'company'
+    ];
     this.baseDn = '';
     /**
      * @public
@@ -88,7 +83,7 @@ function ldapClient () {
         if (userOpts.attributes !== '') {
             userOpts.attributes = userOpts.attributes.split(',');
         } else {
-            userOpts.attributes = this.defaultAttributes.user;
+            userOpts.attributes = this.defaultAttributes;
         }
         return new Promise(function (resolve, reject) {
             that.results = [];

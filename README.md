@@ -47,15 +47,17 @@ More information on ldap queries can be found [here][filterQuery]
 
 `filter` LDAP filter criteria
 
-`attributes` Attributes to be returned for each object. 
-Default attributes:
-- User
-    - `dn`, `userPrincipalName`, `sAMAccountName`, `objectSID`, `mail`,
+`attributes` Attributes to be returned for each object. A comma separated list of attributes to change.
+Default attributes are defined. They are targeted toward user queries. 
+Provide 
+
+Defaults:
+
+
+`dn`, `userPrincipalName`, `sAMAccountName`, `objectSID`, `mail`,
                   `lockoutTime`, `whenCreated`, `pwdLastSet`, `userAccountControl`,
                   `employeeID`, `sn`, `givenName`, `initials`, `cn`, `displayName`,
                   `comment`, `description`, `title`, `department`, `company`
-- Group
-    - `dn`, `cn`, `description`                  
 
 If you wanted to search for all objects where `firstName` starts with `te` you 
 would use the filter `(firstName=te*)` where `te` is the search term and `*` is a wild card.
