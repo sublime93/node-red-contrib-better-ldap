@@ -71,8 +71,13 @@ would use the filter `(firstName=te*)` where `te` is the search term and `*` is 
 Configuration
 -------
 
-Host, port, username, and password are required to configure a new LDAP client.    
-    
+Host, port, username, and password are required to configure a new LDAP client. 
+Noting special is required at for ldap connection. At this time a TLS connection
+is not available. If I get enough requests and someone willing ot test it I am
+more than happy to add the feature.
+
+![configuration settings](./images/configuration_settings.png)
+
 License
 -------
 
