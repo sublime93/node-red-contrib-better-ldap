@@ -3,7 +3,9 @@
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
 Better LDAP includes nodes which implement the [ldapjs][ldapjs] api. Some nodes
-have been simplified to help ease of use.
+have been simplified to help ease of use. Time has been taken to make sure that
+the only dependency is ldapjs. This does make the code a bit more complex
+but I feel it enables a better cleaner project.  
 
 Install
 -------
@@ -11,6 +13,8 @@ Install
 Run the following command in the root directory of your Node-RED install
 
     npm install node-red-contrib-better-ldap
+
+Or add via **Manage Palette**
 
 Nodes
 -------
@@ -72,7 +76,7 @@ Host, port, username, and password are required to configure a new LDAP client.
 License
 -------
 
-See [license](https://github.com/rocky3598/node-red-contrib-better-ldap/blob/master/LICENSE)
+See [license](https://github.com/sublime93/node-red-contrib-better-ldap/blob/master/LICENSE.md)
     
 [ldapjs]: https://github.com/joyent/node-ldapjs    
 [filterQuery]: https://docs.ldap.com/specs/rfc4515.txt
