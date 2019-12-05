@@ -115,8 +115,8 @@ function ldapClient () {
      */
     this.onSearchEntry = function (item, raw, callback) {
         if (raw.hasOwnProperty('objectSid')) item.objectSid = uuidParse.unparse(raw.objectSid);
-        if (raw.hasOwnProperty("objectGUID")) entry.objectGUID = uuidParse.unparse(raw.objectGUID);
-        if (raw.hasOwnProperty("mS-DS-ConsistencyGuid")) entry['mS-DS-ConsistencyGuid'] = uuidParse.unparse(raw['mS-DS-ConsistencyGuid']);
+        if (raw.hasOwnProperty('objectGUID')) entry.objectGUID = uuidParse.unparse(raw.objectGUID);
+        if (raw.hasOwnProperty('mS-DS-ConsistencyGuid')) entry['mS-DS-ConsistencyGuid'] = uuidParse.unparse(raw['mS-DS-ConsistencyGuid']);
         callback(item);
     };
 

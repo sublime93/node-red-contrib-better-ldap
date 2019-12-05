@@ -15,7 +15,7 @@ module.exports = function (RED) {
         node.status({ });
 
         this.connect = function(config, node) {
-            node.status({ fill:"blue",shape:"dot",text: 'connecting...' });
+            node.status({ fill: 'blue' ,shape: 'dot', text: 'connecting...' });
 
             that.ldapClient = new ldapClient();
             that.ldapClient.random = Math.random();
@@ -85,6 +85,8 @@ module.exports = function (RED) {
         this.ldapConfig = RED.nodes.getNode(n.ldap);
         let node = this;
 
+        this.ldapConfig.connect(this.ldapConfig, node);
+
         node.on('input', async function (msg) {
             node.baseDn = msg.baseDn || node.baseDn;
             node.searchScope = msg.searchScope || node.searchScope;
@@ -111,8 +113,8 @@ module.exports = function (RED) {
 
     RED.nodes.registerType('ldap', ldapNode, {
         credentials: {
-            username: { type: "text" },
-            password: { type: "password" }
+            username: { type: 'text' },
+            password: { type: 'password' }
         }
     });
     RED.nodes.registerType('ldap-update in', ldapUpdateNode);

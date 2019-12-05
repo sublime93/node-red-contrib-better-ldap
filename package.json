@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-better-ldap",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A better node for LDAP communication.",
   "main": "transports/ldap/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rocky3598/node-red-contrib-better-ldap.git"
+    "url": "git+https://github.com/sublime93/node-red-contrib-better-ldap.git"
   },
   "keywords": [
     "better",
@@ -25,9 +25,9 @@
   "author": "Jordan Vohwinkel <jvohwinkel@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rocky3598/node-red-contrib-better-ldap/issues"
+    "url": "https://github.com/sublime93/node-red-contrib-better-ldap/issues"
   },
-  "homepage": "https://github.com/rocky3598/node-red-contrib-better-ldap#readme",
+  "homepage": "https://github.com/sublime93/node-red-contrib-better-ldap#readme",
   "dependencies": {
     "ldapjs": "^1.0.2"
   }

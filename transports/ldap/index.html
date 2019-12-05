@@ -32,7 +32,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('ldap-update in', {
         category: 'storage-input',
-        color:"#AAAA66",
+        color: '#AAAA66',
         defaults: {
             name: { value: '' },
             ldap: { type: 'ldap', required: true },
@@ -43,7 +43,7 @@
         },
         inputs: 1,
         outputs: 1,
-        icon: "db.png",
+        icon: 'db.png',
         label: function () {
             return this.name || 'ldap-update';
         },
@@ -87,7 +87,7 @@
 <script type="text/javascript">
   RED.nodes.registerType('ldap-search in', {
     category: 'storage-input',
-    color:"#AAAA66",
+    color: '#AAAA66',
     defaults: {
       name: { value: '' },
       ldap: { type: 'ldap', required: true },
@@ -98,7 +98,7 @@
     },
     inputs: 1,
     outputs: 1,
-    icon: "db.png",
+    icon: 'db.png',
     label: function () {
       return this.name || 'ldap-search';
     },
@@ -135,24 +135,21 @@
                 port: { value: '389', required: true, validate: RED.validators.number() },
             },
             credentials: {
-                username: { type: "text" },
-                password: { type: "password" }
+                username: { type: 'text' },
+                password: { type: 'password' }
             },
             exportable: false,
             label: function() {
                 return this.host || ''
             },
             oneditsave: function() {
-                let trimFields = [
-                    "username",
-                    "password"
-                ];
-                // Just in case any whitespace has crept in with the copy-paste of the fields
-                trimFields.forEach(function(field) {
-                    let v = $("#node-config-input-"+field).val();
-                    v = v.trim();
-                    $("#node-config-input-"+field).val(v);
-                });
+              let trimFields = ['username', 'password'];
+              // Just in case any whitespace has crept in with the copy-paste of the fields
+              trimFields.forEach(function(field) {
+                let v = $('#node-config-input-' + field).val();
+                v = v.trim();
+                $('#node-config-input-' + field).val(v);
+              });
             }
         });
     })();
