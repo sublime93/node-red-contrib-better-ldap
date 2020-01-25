@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/sublime93/node-red-contrib-better-ldap#readme",
   "dependencies": {
-    "ldapjs": "^1.0.2"
+    "ldapjs": "^1.0.2",
+    "mustache": "^4.0.0"
   }
 }
