@@ -1,7 +1,8 @@
 const ldapClient = require('./ldap');
 module.exports = function (RED) {
     'use strict';
-
+    const mustache = require("mustache");
+    
     function ldapNode (n) {
         RED.nodes.createNode(this, n);
         let node = this;
@@ -88,10 +89,10 @@ module.exports = function (RED) {
         this.ldapConfig.connect(this.ldapConfig, node);
 
         node.on('input', async function (msg) {
-            node.baseDn = msg.baseDn || node.baseDn;
-            node.searchScope = msg.searchScope || node.searchScope;
-            node.filter = msg.filter || node.filter;
-            node.attributes = msg.attributes || node.attributes;
+            node.baseDn = msg.baseDn || mustache.render(node.baseDn,msg);
+            node.searchScope = msg.searchScope || mustache.render(node.searchScope,msg);
+            node.filter = msg.filter || mustache.render(node.filter,msg);
+            node.attributes = msg.attributes || mustache.render(node.attributes,msg);
 
             try {
                 node.status({ fill: 'blue', shape: 'dot', text: 'running query' });
