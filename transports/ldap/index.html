@@ -1,3 +1,81 @@
+<script type="text/x-red" data-template-name="ldap-add in">
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-ldap"><i class="fa fa-user"></i> Add new LDAP Server</label>
+    <input type="text" id="node-input-ldap">
+  </div>
+  <div class="form-row">
+      <label for="node-input-dn"> DN</label>
+      <input type="text" id="node-input-dn" placeholder="CN=jim bob,OU=users,DC=corp,DC=com">
+  </div>
+  <div class="form-row">
+      <label for="node-input-entry"> Entry</label>
+      <input type="text" id="node-input-entry" placeholder="[attribute: value]">
+  </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('ldap-add in', {
+        category: 'storage-input',
+        color: '#AAAA66',
+        defaults: {
+            name: { value: '' },
+            ldap: { type: 'ldap', required: true },
+            dn: { value: '' },
+            entry: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'db.png',
+        label: function () {
+            return this.name || 'ldap-add';
+        },
+        labelStyle: function () {
+            return this.name ? 'node_label_italic' : '';
+        },
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="ldap-del in">
+  <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-ldap"><i class="fa fa-user"></i> Add new LDAP Server</label>
+    <input type="text" id="node-input-ldap">
+  </div>
+  <div class="form-row">
+      <label for="node-input-dn"> DN</label>
+      <input type="text" id="node-input-dn" placeholder="CN=jim bob,OU=users,DC=corp,DC=com">
+  </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('ldap-del in', {
+        category: 'storage-input',
+        color: '#AAAA66',
+        defaults: {
+            name: { value: '' },
+            ldap: { type: 'ldap', required: true },
+            dn: { value: '' }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'db.png',
+        label: function () {
+            return this.name || 'ldap-del';
+        },
+        labelStyle: function () {
+            return this.name ? 'node_label_italic' : '';
+        },
+    });
+</script>
+
 <script type="text/x-red" data-template-name="ldap-update in">
   <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>

@@ -76,6 +76,64 @@ module.exports = function (RED) {
         });
     }
 
+    function ldapAddNode (n) {
+        RED.nodes.createNode(this, n);
+        this.entry = n.entry;
+        this.ldapConfig = RED.nodes.getNode(n.ldap);
+        let node = this;
+
+        this.ldapConfig.connect(this.ldapConfig, node);
+
+        node.on('input', async function (msg) {
+            node.dn = msg.dn || node.dn;
+            node.entry = msg.payload || node.entry;
+
+            try {
+                node.status({ fill: 'blue', shape: 'dot', text: 'running add' });
+
+                let add = await this.ldapConfig.ldapClient.add(node.dn, node.entry);
+                msg.ldapStatus = add;
+
+                node.send(msg);
+
+                node.status({ fill: 'green', shape: 'dot', text: 'completed' });
+            } catch (err) {
+                msg.error = err;
+                node.send(msg);
+                node.status({ fill: 'red', shape: 'ring', text: 'failed' });
+                node.error(err ? err.toString() : 'Unknown error' );
+            }
+        });
+    }
+
+    function ldapDelNode (n) {
+        RED.nodes.createNode(this, n);
+        this.ldapConfig = RED.nodes.getNode(n.ldap);
+        let node = this;
+
+        this.ldapConfig.connect(this.ldapConfig, node);
+
+        node.on('input', async function (msg) {
+            node.dn = msg.dn || node.dn;
+
+            try {
+                node.status({ fill: 'blue', shape: 'dot', text: 'running delete' });
+
+                let del = await this.ldapConfig.ldapClient.del(node.dn);
+                msg.ldapStatus = del;
+
+                node.send(msg);
+
+                node.status({ fill: 'green', shape: 'dot', text: 'completed' });
+            } catch (err) {
+                msg.error = err;
+                node.send(msg);
+                node.status({ fill: 'red', shape: 'ring', text: 'failed' });
+                node.error(err ? err.toString() : 'Unknown error' );
+            }
+        });
+    }
+
     function ldapSearchNode (n) {
         RED.nodes.createNode(this, n);
         this.baseDn = n.baseDn;
@@ -119,4 +177,6 @@ module.exports = function (RED) {
     });
     RED.nodes.registerType('ldap-update in', ldapUpdateNode);
     RED.nodes.registerType('ldap-search in', ldapSearchNode);
+    RED.nodes.registerType('ldap-add in', ldapAddNode);
+    RED.nodes.registerType('ldap-del in', ldapDelNode);
 };
