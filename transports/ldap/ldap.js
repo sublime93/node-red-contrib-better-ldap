@@ -65,13 +65,50 @@ function ldapClient () {
         return new Promise(function (resolve, reject) {
             that.client.modify(dn, change, function(err, res) {
                 if (err) {
-
                     return reject({ success: false, error: err });
                 }
                 return resolve({ success: true });
             });
         });
     };
+
+    /**
+     * @public
+     * @param {string} dn       DN of the object to add
+     * @param {object} entry    JS object containing all of the attributes and values
+     * @returns {Promise<array(object)>}
+     */
+    this.add = async function (dn, entry) {
+      let that = this;
+
+      return new Promise(function (resolve, reject) {
+          that.client.add(dn, entry, function(err, res) {
+              if (err) {
+                  return reject({ success: false, error: err });
+              }
+              return resolve({ success: true });
+          });
+      });
+    }
+
+    /**
+     * @public
+     * @param {string} dn       DN of the object to remove
+     * @returns {Promise<array(object)>}
+     */
+    this.del = async function (dn) {
+        let that = this;
+
+        return new Promise(function (resolve, reject) {
+            that.client.del(dn, function(err, res) {
+                if (err) {
+                    return reject({ success: false, error: err });
+                }
+                return resolve({ success: true });
+            });
+        });
+    }
+
     /**
      * @public
      * @param {string} dn       base dn for the search
